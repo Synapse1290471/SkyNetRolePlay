@@ -1,650 +1,1873 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>SkyNet — цифровая платформа</title>
-
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            font-family: Arial, Helvetica, sans-serif;
-            background: #020617;
-            color: #fff;
-            overflow-x: hidden;
-        }
-
-        /* Фон */
-
-        .background {
-            position: fixed;
-            inset: 0;
-            z-index: -2;
-            background:
-                radial-gradient(circle at 20% 20%, #07598555, transparent 35%),
-                radial-gradient(circle at 80% 70%, #4f46e555, transparent 35%),
-                #020617;
-        }
-
-        .stars {
-            position: fixed;
-            inset: 0;
-            z-index: -1;
-            background-image:
-                radial-gradient(#38bdf8 1px, transparent 1px),
-                radial-gradient(#818cf8 1px, transparent 1px);
-            background-size: 80px 80px, 120px 120px;
-            background-position: 0 0, 40px 60px;
-            opacity: .25;
-            animation: moveStars 20s linear infinite;
-        }
-
-        @keyframes moveStars {
-            from {
-                transform: translateY(0);
-            }
-            to {
-                transform: translateY(80px);
-            }
-        }
-
-        /* Навигация */
-
-        header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            z-index: 100;
-            padding: 18px 7%;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: rgba(2, 6, 23, .7);
-            backdrop-filter: blur(15px);
-            border-bottom: 1px solid rgba(255,255,255,.08);
-        }
-
-        .logo {
-            font-size: 27px;
-            font-weight: 800;
-            color: #38bdf8;
-            text-shadow: 0 0 20px #0ea5e9;
-        }
-
-        nav {
-            display: flex;
-            gap: 28px;
-        }
-
-        nav a {
-            color: #cbd5e1;
-            text-decoration: none;
-            transition: .3s;
-        }
-
-        nav a:hover {
-            color: #38bdf8;
-        }
-
-        .login-button {
-            border: 1px solid #38bdf8;
-            color: #38bdf8;
-            background: transparent;
-            padding: 10px 20px;
-            border-radius: 25px;
-            cursor: pointer;
-            transition: .3s;
-        }
-
-        .login-button:hover {
-            background: #38bdf8;
-            color: #020617;
-            box-shadow: 0 0 25px #38bdf8;
-        }
-
-        /* Главный экран */
-
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 120px 20px 60px;
-        }
-
-        .badge {
-            color: #7dd3fc;
-            background: #0c4a6e55;
-            border: 1px solid #0ea5e9;
-            padding: 8px 18px;
-            border-radius: 30px;
-            margin-bottom: 25px;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%,100% {
-                box-shadow: 0 0 0 #38bdf8;
-            }
-            50% {
-                box-shadow: 0 0 25px #38bdf866;
-            }
-        }
-
-        .hero h1 {
-            font-size: clamp(55px, 10vw, 110px);
-            line-height: .95;
-            margin-bottom: 30px;
-            background: linear-gradient(
-                90deg,
-                #38bdf8,
-                #818cf8,
-                #22d3ee
-            );
-            -webkit-background-clip: text;
-            color: transparent;
-            text-shadow: 0 0 50px #0ea5e955;
-        }
-
-        .hero p {
-            max-width: 650px;
-            color: #94a3b8;
-            font-size: 20px;
-            line-height: 1.6;
-            margin-bottom: 35px;
-        }
-
-        .main-button {
-            padding: 15px 35px;
-            border: none;
-            border-radius: 30px;
-            background: linear-gradient(90deg,#0ea5e9,#6366f1);
-            color: white;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: .3s;
-        }
-
-        .main-button:hover {
-            transform: translateY(-4px) scale(1.04);
-            box-shadow: 0 15px 40px #0ea5e955;
-        }
-
-        /* Секции */
-
-        section {
-            padding: 100px 7%;
-        }
-
-        .section-title {
-            text-align: center;
-            margin-bottom: 60px;
-        }
-
-        .section-title h2 {
-            font-size: 42px;
-            margin-bottom: 15px;
-        }
-
-        .section-title p {
-            color: #94a3b8;
-        }
-
-        /* Карточки */
-
-        .cards {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 25px;
-            max-width: 1100px;
-            margin: auto;
-        }
-
-        .card {
-            padding: 35px;
-            border-radius: 25px;
-            background: rgba(15,23,42,.65);
-            border: 1px solid rgba(148,163,184,.15);
-            backdrop-filter: blur(15px);
-            transition: .4s;
-        }
-
-        .card:hover {
-            transform: translateY(-10px);
-            border-color: #38bdf8;
-            box-shadow: 0 15px 50px #0ea5e922;
-        }
-
-        .icon {
-            font-size: 45px;
-            margin-bottom: 20px;
-        }
-
-        .card h3 {
-            font-size: 23px;
-            margin-bottom: 15px;
-        }
-
-        .card p {
-            color: #94a3b8;
-            line-height: 1.6;
-        }
-
-        /* Статистика */
-
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(4,1fr);
-            gap: 20px;
-            max-width: 1100px;
-            margin: auto;
-        }
-
-        .stat {
-            text-align: center;
-            padding: 30px;
-            background: #0f172a99;
-            border-radius: 20px;
-            border: 1px solid #ffffff10;
-        }
-
-        .stat strong {
-            display: block;
-            font-size: 38px;
-            color: #38bdf8;
-            margin-bottom: 8px;
-        }
-
-        .stat span {
-            color: #94a3b8;
-        }
-
-        /* Модальное окно */
-
-        .modal {
-            position: fixed;
-            inset: 0;
-            z-index: 500;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            background: rgba(0,0,0,.75);
-            backdrop-filter: blur(10px);
-            padding: 20px;
-        }
-
-        .modal.active {
-            display: flex;
-        }
-
-        .modal-box {
-            width: 100%;
-            max-width: 420px;
-            padding: 35px;
-            border-radius: 25px;
-            background: #0f172a;
-            border: 1px solid #334155;
-            box-shadow: 0 0 60px #0ea5e933;
-            animation: modalShow .3s ease;
-        }
-
-        @keyframes modalShow {
-            from {
-                opacity: 0;
-                transform: scale(.8);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-
-        .modal-box h2 {
-            text-align: center;
-            margin-bottom: 25px;
-        }
-
-        .input {
-            width: 100%;
-            padding: 14px;
-            margin-bottom: 15px;
-            border-radius: 10px;
-            border: 1px solid #334155;
-            outline: none;
-            background: #020617;
-            color: white;
-        }
-
-        .input:focus {
-            border-color: #38bdf8;
-        }
-
-        .close {
-            float: right;
-            cursor: pointer;
-            font-size: 25px;
-            color: #94a3b8;
-        }
-
-        .close:hover {
-            color: white;
-        }
-
-        .modal-button {
-            width: 100%;
-            padding: 14px;
-            border: none;
-            border-radius: 10px;
-            background: #0ea5e9;
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .modal-button:hover {
-            background: #0284c7;
-        }
-
-        #message {
-            text-align: center;
-            margin-top: 15px;
-            color: #38bdf8;
-        }
-
-        /* Футер */
-
-        footer {
-            text-align: center;
-            padding: 40px 20px;
-            border-top: 1px solid #ffffff10;
-            color: #64748b;
-        }
-
-        /* Телефон */
-
-        @media(max-width: 800px) {
-
-            nav {
-                display: none;
-            }
-
-            header {
-                padding: 15px 5%;
-            }
-
-            .hero {
-                padding-top: 140px;
-            }
-
-            .hero p {
-                font-size: 17px;
-            }
-
-            .cards {
-                grid-template-columns: 1fr;
-            }
-
-            .stats {
-                grid-template-columns: repeat(2,1fr);
-            }
-
-            section {
-                padding: 70px 5%;
-            }
-
-            .section-title h2 {
-                font-size: 32px;
-            }
-        }
-
-        @media(max-width: 450px) {
-
-            .stats {
-                grid-template-columns: 1fr;
-            }
-
-            .logo {
-                font-size: 22px;
-            }
-
-            .login-button {
-                padding: 8px 14px;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>SkyNet RP — Играй по своим правилам</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    font-family:Inter,Arial,sans-serif;
+    background:#080b12;
+    color:#fff;
+    overflow-x:hidden;
+}
+
+button,input,textarea{
+    font:inherit;
+}
+
+button{
+    cursor:pointer;
+}
+
+a{
+    color:inherit;
+    text-decoration:none;
+}
+
+/* ================= BACKGROUND ================= */
+
+body:before{
+    content:"";
+    position:fixed;
+    width:700px;
+    height:700px;
+    left:-300px;
+    top:100px;
+    background:#087cff;
+    filter:blur(220px);
+    opacity:.12;
+    pointer-events:none;
+    z-index:-2;
+}
+
+body:after{
+    content:"";
+    position:fixed;
+    width:600px;
+    height:600px;
+    right:-250px;
+    top:500px;
+    background:#7c3cff;
+    filter:blur(220px);
+    opacity:.1;
+    pointer-events:none;
+    z-index:-2;
+}
+
+/* ================= HEADER ================= */
+
+.header{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    z-index:1000;
+    background:rgba(8,11,18,.78);
+    backdrop-filter:blur(18px);
+    border-bottom:1px solid rgba(255,255,255,.07);
+}
+
+.nav{
+    max-width:1250px;
+    margin:auto;
+    height:76px;
+    padding:0 25px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+}
+
+.logo{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-size:24px;
+    font-weight:900;
+    letter-spacing:-1px;
+}
+
+.logo-mark{
+    width:39px;
+    height:39px;
+    display:grid;
+    place-items:center;
+    border-radius:12px;
+    background:linear-gradient(135deg,#1688ff,#743cff);
+    box-shadow:0 0 25px #147cff55;
+}
+
+.logo span{
+    color:#4aa3ff;
+}
+
+.menu{
+    display:flex;
+    gap:25px;
+}
+
+.menu a{
+    color:#9ba5b5;
+    font-size:14px;
+    transition:.25s;
+}
+
+.menu a:hover{
+    color:#fff;
+}
+
+.nav-actions{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.profile-btn{
+    display:none;
+    align-items:center;
+    gap:8px;
+    padding:9px 13px;
+    border-radius:10px;
+    border:1px solid #ffffff12;
+    background:#ffffff08;
+    color:#fff;
+}
+
+.login-btn{
+    padding:10px 18px;
+    border:0;
+    border-radius:10px;
+    color:white;
+    font-weight:700;
+    background:linear-gradient(135deg,#1688ff,#713cff);
+    box-shadow:0 5px 25px #1688ff25;
+}
+
+.mobile-menu{
+    display:none;
+    font-size:24px;
+    background:none;
+    color:white;
+    border:0;
+}
+
+/* ================= HERO ================= */
+
+.hero{
+    min-height:780px;
+    padding:160px 25px 100px;
+    position:relative;
+    display:flex;
+    align-items:center;
+    overflow:hidden;
+}
+
+.hero-inner{
+    max-width:1250px;
+    width:100%;
+    margin:auto;
+    position:relative;
+    z-index:2;
+}
+
+.hero-content{
+    max-width:650px;
+}
+
+.hero-label{
+    display:inline-flex;
+    gap:8px;
+    align-items:center;
+    padding:8px 13px;
+    border-radius:30px;
+    background:#1688ff12;
+    border:1px solid #1688ff35;
+    color:#63b4ff;
+    font-size:13px;
+    margin-bottom:22px;
+}
+
+.online-dot{
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    background:#32e875;
+    box-shadow:0 0 12px #32e875;
+}
+
+.hero h1{
+    font-size:clamp(48px,7vw,88px);
+    line-height:.94;
+    letter-spacing:-4px;
+    margin-bottom:25px;
+}
+
+.gradient{
+    background:linear-gradient(100deg,#fff,#56aaff,#8a62ff);
+    -webkit-background-clip:text;
+    color:transparent;
+}
+
+.hero p{
+    color:#929cac;
+    font-size:18px;
+    line-height:1.7;
+    max-width:570px;
+    margin-bottom:35px;
+}
+
+.hero-buttons{
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+}
+
+.primary{
+    border:0;
+    padding:14px 23px;
+    border-radius:11px;
+    color:#fff;
+    font-weight:800;
+    background:linear-gradient(135deg,#1688ff,#743cff);
+    transition:.3s;
+}
+
+.primary:hover{
+    transform:translateY(-3px);
+    box-shadow:0 15px 40px #1688ff35;
+}
+
+.secondary{
+    padding:13px 22px;
+    border-radius:11px;
+    color:#dbe4ef;
+    background:#ffffff08;
+    border:1px solid #ffffff12;
+    transition:.3s;
+}
+
+.secondary:hover{
+    background:#ffffff12;
+}
+
+.hero-server{
+    position:absolute;
+    right:5%;
+    top:170px;
+    width:430px;
+    padding:25px;
+    border-radius:22px;
+    background:linear-gradient(145deg,#111827dd,#080b12dd);
+    border:1px solid #ffffff12;
+    box-shadow:0 30px 100px #0008;
+    animation:float 5s ease-in-out infinite;
+}
+
+@keyframes float{
+    0%,100%{transform:translateY(0)}
+    50%{transform:translateY(-15px)}
+}
+
+.server-top{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:22px;
+}
+
+.server-status{
+    color:#3de57c;
+    font-size:12px;
+}
+
+.server-title{
+    font-size:22px;
+    font-weight:800;
+    margin-bottom:7px;
+}
+
+.server-sub{
+    color:#778294;
+    font-size:13px;
+}
+
+.progress{
+    height:7px;
+    background:#ffffff0d;
+    border-radius:20px;
+    overflow:hidden;
+    margin:15px 0;
+}
+
+.progress div{
+    width:73%;
+    height:100%;
+    background:linear-gradient(90deg,#1688ff,#7b45ff);
+}
+
+.server-info{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+}
+
+.info{
+    padding:13px;
+    background:#ffffff05;
+    border-radius:12px;
+}
+
+.info small{
+    color:#6e7888;
+    display:block;
+    margin-bottom:5px;
+}
+
+.info b{
+    font-size:14px;
+}
+
+/* ================= SECTIONS ================= */
+
+.section{
+    max-width:1250px;
+    margin:auto;
+    padding:90px 25px;
+}
+
+.section-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:end;
+    margin-bottom:35px;
+}
+
+.section-head h2{
+    font-size:36px;
+    letter-spacing:-1.5px;
+}
+
+.section-head p{
+    color:#747f90;
+    margin-top:8px;
+}
+
+.view-all{
+    color:#4ba6ff;
+    font-size:14px;
+}
+
+/* ================= SERVERS ================= */
+
+.server-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:18px;
+}
+
+.server-card{
+    position:relative;
+    overflow:hidden;
+    padding:25px;
+    min-height:220px;
+    border-radius:18px;
+    border:1px solid #ffffff0b;
+    background:#10151f;
+    transition:.35s;
+}
+
+.server-card:hover{
+    transform:translateY(-7px);
+    border-color:#1688ff55;
+    box-shadow:0 20px 60px #0006;
+}
+
+.server-card h3{
+    font-size:21px;
+    margin:18px 0 8px;
+}
+
+.server-card p{
+    color:#7f8a9b;
+    font-size:13px;
+    line-height:1.6;
+}
+
+.server-number{
+    position:absolute;
+    right:20px;
+    top:20px;
+    color:#303949;
+    font-size:40px;
+    font-weight:900;
+}
+
+.server-icon{
+    width:48px;
+    height:48px;
+    border-radius:13px;
+    display:grid;
+    place-items:center;
+    background:#1688ff18;
+    color:#4da9ff;
+    font-size:22px;
+}
+
+.play{
+    margin-top:20px;
+    padding:10px 15px;
+    border-radius:9px;
+    border:0;
+    background:#1688ff18;
+    color:#54acff;
+}
+
+/* ================= NEWS ================= */
+
+.news-grid{
+    display:grid;
+    grid-template-columns:2fr 1fr 1fr;
+    gap:18px;
+}
+
+.news{
+    min-height:270px;
+    padding:25px;
+    border-radius:18px;
+    border:1px solid #ffffff0b;
+    background:#10151f;
+    display:flex;
+    flex-direction:column;
+    justify-content:end;
+    position:relative;
+    overflow:hidden;
+}
+
+.news:before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:linear-gradient(transparent,#000);
+}
+
+.news>*{
+    position:relative;
+    z-index:2;
+}
+
+.news-big{
+    background:
+        linear-gradient(180deg,transparent,#080b12),
+        radial-gradient(circle at 70% 30%,#1565c0,#111827);
+}
+
+.news-tag{
+    color:#53adff;
+    font-size:11px;
+    text-transform:uppercase;
+    font-weight:800;
+    margin-bottom:10px;
+}
+
+.news h3{
+    font-size:20px;
+    margin-bottom:8px;
+}
+
+.news p{
+    color:#8993a2;
+    font-size:13px;
+}
+
+/* ================= SHOP ================= */
+
+.shop-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:18px;
+}
+
+.product{
+    padding:25px;
+    border-radius:17px;
+    background:#10151f;
+    border:1px solid #ffffff0b;
+    text-align:center;
+    transition:.3s;
+}
+
+.product:hover{
+    transform:translateY(-5px);
+    border-color:#713cff55;
+}
+
+.product-image{
+    height:130px;
+    display:grid;
+    place-items:center;
+    font-size:60px;
+}
+
+.product h3{
+    margin-bottom:7px;
+}
+
+.product p{
+    color:#727d8d;
+    font-size:12px;
+    margin-bottom:15px;
+}
+
+.price{
+    color:#59adff;
+    font-weight:900;
+    margin-bottom:15px;
+}
+
+.buy{
+    width:100%;
+    padding:11px;
+    border:0;
+    border-radius:9px;
+    color:#fff;
+    background:linear-gradient(135deg,#1688ff,#713cff);
+}
+
+/* ================= FORUM ================= */
+
+.forum{
+    display:grid;
+    gap:10px;
+}
+
+.topic{
+    display:grid;
+    grid-template-columns:55px 1fr 120px;
+    align-items:center;
+    gap:15px;
+    padding:18px;
+    border:1px solid #ffffff08;
+    background:#10151f;
+    border-radius:13px;
+    transition:.25s;
+}
+
+.topic:hover{
+    background:#141b27;
+}
+
+.topic-icon{
+    width:43px;
+    height:43px;
+    border-radius:10px;
+    display:grid;
+    place-items:center;
+    background:#1688ff15;
+    color:#54adff;
+}
+
+.topic h3{
+    font-size:14px;
+    margin-bottom:5px;
+}
+
+.topic p{
+    color:#6e7887;
+    font-size:12px;
+}
+
+.topic-count{
+    color:#778293;
+    font-size:12px;
+    text-align:right;
+}
+
+/* ================= RULES ================= */
+
+.rules{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:18px;
+}
+
+.rule{
+    padding:25px;
+    border-left:3px solid #1688ff;
+    background:#10151f;
+    border-radius:0 14px 14px 0;
+}
+
+.rule h3{
+    margin-bottom:10px;
+}
+
+.rule p{
+    color:#818b9b;
+    font-size:13px;
+    line-height:1.6;
+}
+
+/* ================= MODAL ================= */
+
+.overlay{
+    position:fixed;
+    inset:0;
+    background:#000b;
+    backdrop-filter:blur(12px);
+    z-index:3000;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+}
+
+.overlay.show{
+    display:flex;
+}
+
+.modal{
+    width:100%;
+    max-width:430px;
+    padding:30px;
+    background:#10151f;
+    border:1px solid #ffffff12;
+    border-radius:20px;
+    box-shadow:0 30px 100px #000;
+    animation:modal .25s ease;
+}
+
+@keyframes modal{
+    from{
+        opacity:0;
+        transform:translateY(20px) scale(.97);
+    }
+    to{
+        opacity:1;
+        transform:none;
+    }
+}
+
+.modal-head{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:25px;
+}
+
+.modal-head h2{
+    font-size:23px;
+}
+
+.close{
+    border:0;
+    background:none;
+    color:#8c96a5;
+    font-size:25px;
+}
+
+.field{
+    margin-bottom:14px;
+}
+
+.field label{
+    display:block;
+    color:#8d97a6;
+    font-size:12px;
+    margin-bottom:7px;
+}
+
+.field input,
+.field textarea{
+    width:100%;
+    padding:13px;
+    background:#080b12;
+    border:1px solid #ffffff0d;
+    border-radius:9px;
+    outline:none;
+    color:#fff;
+}
+
+.field input:focus,
+.field textarea:focus{
+    border-color:#1688ff;
+}
+
+.modal-submit{
+    width:100%;
+    padding:13px;
+    border:0;
+    border-radius:9px;
+    background:linear-gradient(135deg,#1688ff,#713cff);
+    color:#fff;
+    font-weight:800;
+    margin-top:8px;
+}
+
+.switch{
+    text-align:center;
+    margin-top:18px;
+    color:#727e8f;
+    font-size:13px;
+}
+
+.switch span{
+    color:#49a7ff;
+    cursor:pointer;
+}
+
+/* ================= PROFILE ================= */
+
+.profile{
+    display:grid;
+    grid-template-columns:160px 1fr;
+    gap:25px;
+    padding:10px;
+}
+
+.avatar{
+    width:130px;
+    height:130px;
+    border-radius:50%;
+    display:grid;
+    place-items:center;
+    font-size:45px;
+    background:linear-gradient(135deg,#1688ff,#713cff);
+}
+
+.profile h2{
+    margin:10px 0;
+}
+
+.profile p{
+    color:#818b9b;
+}
+
+.profile-stats{
+    margin-top:20px;
+    display:flex;
+    gap:15px;
+    flex-wrap:wrap;
+}
+
+.profile-stat{
+    padding:13px 20px;
+    border-radius:10px;
+    background:#ffffff08;
+}
+
+.profile-stat b{
+    color:#55acff;
+}
+
+/* ================= TOAST ================= */
+
+.toast{
+    position:fixed;
+    right:25px;
+    bottom:25px;
+    z-index:5000;
+    padding:15px 20px;
+    background:#121a27;
+    border:1px solid #ffffff12;
+    border-radius:12px;
+    box-shadow:0 15px 50px #0008;
+    transform:translateY(100px);
+    opacity:0;
+    transition:.35s;
+}
+
+.toast.show{
+    transform:none;
+    opacity:1;
+}
+
+/* ================= FOOTER ================= */
+
+footer{
+    border-top:1px solid #ffffff08;
+    padding:45px 25px;
+    color:#566171;
+    text-align:center;
+}
+
+footer strong{
+    color:#4aa7ff;
+}
+
+/* ================= MOBILE ================= */
+
+@media(max-width:900px){
+
+    .menu{
+        display:none;
+    }
+
+    .mobile-menu{
+        display:block;
+    }
+
+    .hero-server{
+        display:none;
+    }
+
+    .hero-content{
+        text-align:center;
+        margin:auto;
+    }
+
+    .hero-buttons{
+        justify-content:center;
+    }
+
+    .server-grid{
+        grid-template-columns:1fr;
+    }
+
+    .news-grid{
+        grid-template-columns:1fr;
+    }
+
+    .shop-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .rules{
+        grid-template-columns:1fr;
+    }
+
+}
+
+@media(max-width:600px){
+
+    .nav{
+        padding:0 15px;
+    }
+
+    .profile-btn{
+        display:flex;
+    }
+
+    .login-btn{
+        display:none;
+    }
+
+    .hero{
+        min-height:700px;
+        padding-left:18px;
+        padding-right:18px;
+    }
+
+    .hero h1{
+        letter-spacing:-2px;
+    }
+
+    .hero p{
+        font-size:15px;
+    }
+
+    .section{
+        padding:65px 18px;
+    }
+
+    .section-head{
+        display:block;
+    }
+
+    .section-head h2{
+        font-size:29px;
+    }
+
+    .view-all{
+        display:inline-block;
+        margin-top:15px;
+    }
+
+    .shop-grid{
+        grid-template-columns:1fr;
+    }
+
+    .topic{
+        grid-template-columns:45px 1fr;
+    }
+
+    .topic-count{
+        display:none;
+    }
+
+    .profile{
+        grid-template-columns:1fr;
+        text-align:center;
+    }
+
+    .avatar{
+        margin:auto;
+    }
+}
+</style>
 </head>
 
 <body>
 
-<div class="background"></div>
-<div class="stars"></div>
+<!-- HEADER -->
 
-<!-- Навигация -->
+<header class="header">
 
-<header>
+    <div class="nav">
 
-    <div class="logo">☁ SkyNet</div>
+        <a href="#home" class="logo">
+            <div class="logo-mark">☁</div>
+            Sky<span>Net</span> RP
+        </a>
 
-    <nav>
-        <a href="#home">Главная</a>
-        <a href="#features">Возможности</a>
-        <a href="#stats">Статистика</a>
-    </nav>
+        <nav class="menu">
+            <a href="#servers">Серверы</a>
+            <a href="#news">Новости</a>
+            <a href="#forum">Форум</a>
+            <a href="#shop">Магазин</a>
+            <a href="#rules">Правила</a>
+        </nav>
 
-    <button class="login-button" onclick="openLogin()">
-        Войти
-    </button>
+        <div class="nav-actions">
+
+            <button class="profile-btn" onclick="openProfile()">
+                👤 Профиль
+            </button>
+
+            <button class="login-btn" onclick="openAuth()">
+                Войти
+            </button>
+
+            <button class="mobile-menu" onclick="toggleMenu()">
+                ☰
+            </button>
+
+        </div>
+
+    </div>
 
 </header>
 
 
-<!-- Главная -->
-
-<main>
+<!-- HERO -->
 
 <section class="hero" id="home">
 
-    <div class="badge">
-        🚀 Добро пожаловать в SkyNet
-    </div>
+    <div class="hero-inner">
 
-    <h1>SkyNet</h1>
+        <div class="hero-content">
 
-    <p>
-        Новое поколение цифровой платформы.
-        Быстро. Безопасно. Современно.
-    </p>
+            <div class="hero-label">
+                <span class="online-dot"></span>
+                Серверы работают
+            </div>
 
-    <button class="main-button" onclick="openLogin()">
-        Начать работу →
-    </button>
+            <h1>
+                Добро пожаловать<br>
+                в <span class="gradient">SkyNet RP</span>
+            </h1>
 
-</section>
-
-
-<!-- Возможности -->
-
-<section id="features">
-
-    <div class="section-title">
-        <h2>Возможности SkyNet</h2>
-        <p>Всё необходимое в одной платформе</p>
-    </div>
-
-    <div class="cards">
-
-        <div class="card">
-            <div class="icon">⚡</div>
-            <h3>Высокая скорость</h3>
             <p>
-                Оптимизированная система обеспечивает
-                быструю работу сайта на компьютерах
-                и мобильных устройствах.
+                Создай свою историю. Стань бизнесменом, полицейским,
+                врачом или просто живи жизнью, которую всегда хотел.
+                Твой выбор — твоя история.
             </p>
+
+            <div class="hero-buttons">
+
+                <a href="#servers" class="primary">
+                    Играть сейчас
+                </a>
+
+                <a href="#news" class="secondary">
+                    Узнать новости
+                </a>
+
+            </div>
+
         </div>
 
-        <div class="card">
-            <div class="icon">🔐</div>
-            <h3>Безопасность</h3>
-            <p>
-                Современный интерфейс и архитектура,
-                созданные с учётом безопасности
-                пользовательских данных.
-            </p>
-        </div>
 
-        <div class="card">
-            <div class="icon">☁️</div>
-            <h3>Облачная система</h3>
-            <p>
-                Доступ к вашей платформе из любого
-                места и с любого устройства.
-            </p>
-        </div>
+        <!-- SERVER WIDGET -->
 
-    </div>
+        <div class="hero-server">
 
-</section>
+            <div class="server-top">
 
+                <div>
+                    <div class="server-title">
+                        SkyNet RP #1
+                    </div>
 
-<!-- Статистика -->
+                    <div class="server-sub">
+                        Основной сервер
+                    </div>
+                </div>
 
-<section id="stats">
+                <div class="server-status">
+                    ● ONLINE
+                </div>
 
-    <div class="section-title">
-        <h2>SkyNet в цифрах</h2>
-        <p>Платформа, созданная для будущего</p>
-    </div>
+            </div>
 
-    <div class="stats">
+            <div class="progress">
+                <div></div>
+            </div>
 
-        <div class="stat">
-            <strong>99.9%</strong>
-            <span>Доступность</span>
-        </div>
+            <div class="server-info">
 
-        <div class="stat">
-            <strong>24/7</strong>
-            <span>Работа системы</span>
-        </div>
+                <div class="info">
+                    <small>Игроки</small>
+                    <b>742 / 1000</b>
+                </div>
 
-        <div class="stat">
-            <strong>∞</strong>
-            <span>Возможности</span>
-        </div>
+                <div class="info">
+                    <small>Пинг</small>
+                    <b>32 ms</b>
+                </div>
 
-        <div class="stat">
-            <strong>1</strong>
-            <span>Единая платформа</span>
+                <div class="info">
+                    <small>Версия</small>
+                    <b>1.0.6</b>
+                </div>
+
+                <div class="info">
+                    <small>Статус</small>
+                    <b style="color:#38e67b">
+                        Стабильно
+                    </b>
+                </div>
+
+            </div>
+
         </div>
 
     </div>
 
 </section>
 
-</main>
+
+<!-- SERVERS -->
+
+<section class="section" id="servers">
+
+    <div class="section-head">
+
+        <div>
+            <h2>Наши серверы</h2>
+            <p>Выбирай свой мир и начинай играть</p>
+        </div>
+
+    </div>
+
+    <div class="server-grid">
+
+        <div class="server-card">
+
+            <span class="server-number">01</span>
+
+            <div class="server-icon">🌆</div>
+
+            <h3>SkyNet RP #1</h3>
+
+            <p>
+                Основной сервер проекта.
+                Большой город, экономика,
+                фракции и тысячи возможностей.
+            </p>
+
+            <button class="play"
+                    onclick="joinServer('SkyNet RP #1')">
+                Играть
+            </button>
+
+        </div>
 
 
-<!-- Футер -->
+        <div class="server-card">
+
+            <span class="server-number">02</span>
+
+            <div class="server-icon">🏙️</div>
+
+            <h3>SkyNet RP #2</h3>
+
+            <p>
+                Альтернативный сервер
+                с отдельной экономикой
+                и игровым сообществом.
+            </p>
+
+            <button class="play"
+                    onclick="joinServer('SkyNet RP #2')">
+                Играть
+            </button>
+
+        </div>
+
+
+        <div class="server-card">
+
+            <span class="server-number">03</span>
+
+            <div class="server-icon">🚀</div>
+
+            <h3>SkyNet RP Beta</h3>
+
+            <p>
+                Экспериментальная площадка,
+                где появляются новые механики.
+            </p>
+
+            <button class="play"
+                    onclick="joinServer('SkyNet RP Beta')">
+                Подробнее
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- NEWS -->
+
+<section class="section" id="news">
+
+    <div class="section-head">
+
+        <div>
+            <h2>Последние новости</h2>
+            <p>Следи за событиями проекта</p>
+        </div>
+
+        <a class="view-all" href="#news">
+            Все новости →
+        </a>
+
+    </div>
+
+
+    <div class="news-grid">
+
+        <article class="news news-big">
+
+            <span class="news-tag">
+                Обновление
+            </span>
+
+            <h3>
+                SkyNet 1.0.6 — новый масштабный апдейт
+            </h3>
+
+            <p>
+                Новые автомобили, бизнесы, задания,
+                оптимизация сервера и многое другое.
+            </p>
+
+        </article>
+
+
+        <article class="news">
+
+            <span class="news-tag">
+                События
+            </span>
+
+            <h3>
+                Большое летнее мероприятие
+            </h3>
+
+            <p>
+                Прими участие и получи уникальные награды.
+            </p>
+
+        </article>
+
+
+        <article class="news">
+
+            <span class="news-tag">
+                Проект
+            </span>
+
+            <h3>
+                Новая система фракций
+            </h3>
+
+            <p>
+                Управляй своей организацией.
+            </p>
+
+        </article>
+
+    </div>
+
+</section>
+
+
+<!-- SHOP -->
+
+<section class="section" id="shop">
+
+    <div class="section-head">
+
+        <div>
+            <h2>Магазин</h2>
+            <p>Уникальные предметы и возможности</p>
+        </div>
+
+    </div>
+
+
+    <div class="shop-grid">
+
+        <div class="product">
+
+            <div class="product-image">💎</div>
+
+            <h3>500 SkyCoins</h3>
+
+            <p>
+                Игровая валюта проекта
+            </p>
+
+            <div class="price">
+                499 ₽
+            </div>
+
+            <button class="buy"
+                    onclick="buyItem('500 SkyCoins',499)">
+                Купить
+            </button>
+
+        </div>
+
+
+        <div class="product">
+
+            <div class="product-image">🚘</div>
+
+            <h3>Premium Auto</h3>
+
+            <p>
+                Эксклюзивный автомобиль
+            </p>
+
+            <div class="price">
+                799 ₽
+            </div>
+
+            <button class="buy"
+                    onclick="buyItem('Premium Auto',799)">
+                Купить
+            </button>
+
+        </div>
+
+
+        <div class="product">
+
+            <div class="product-image">👑</div>
+
+            <h3>VIP Gold</h3>
+
+            <p>
+                VIP-статус на 30 дней
+            </p>
+
+            <div class="price">
+                999 ₽
+            </div>
+
+            <button class="buy"
+                    onclick="buyItem('VIP Gold',999)">
+                Купить
+            </button>
+
+        </div>
+
+
+        <div class="product">
+
+            <div class="product-image">🏢</div>
+
+            <h3>Бизнес</h3>
+
+            <p>
+                Стартовый бизнес
+            </p>
+
+            <div class="price">
+                1499 ₽
+            </div>
+
+            <button class="buy"
+                    onclick="buyItem('Бизнес',1499)">
+                Купить
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- FORUM -->
+
+<section class="section" id="forum">
+
+    <div class="section-head">
+
+        <div>
+            <h2>Форум SkyNet</h2>
+            <p>Общайся с игроками и обсуждай проект</p>
+        </div>
+
+        <button class="secondary"
+                onclick="openForum()">
+            Создать тему
+        </button>
+
+    </div>
+
+
+    <div class="forum">
+
+        <div class="topic">
+
+            <div class="topic-icon">📢</div>
+
+            <div>
+                <h3>Новости и обновления проекта</h3>
+                <p>
+                    Администрация · Сегодня
+                </p>
+            </div>
+
+            <div class="topic-count">
+                128 ответов
+            </div>
+
+        </div>
+
+
+        <div class="topic">
+
+            <div class="topic-icon">💬</div>
+
+            <div>
+                <h3>Общение игроков</h3>
+                <p>
+                    Флудилка · Сегодня
+                </p>
+            </div>
+
+            <div class="topic-count">
+                2 431 ответ
+            </div>
+
+        </div>
+
+
+        <div class="topic">
+
+            <div class="topic-icon">🚓</div>
+
+            <div>
+                <h3>Государственные организации</h3>
+                <p>
+                    Фракции · Вчера
+                </p>
+            </div>
+
+            <div class="topic-count">
+                814 ответов
+            </div>
+
+        </div>
+
+
+        <div class="topic">
+
+            <div class="topic-icon">🎮</div>
+
+            <div>
+                <h3>Предложения по улучшению</h3>
+                <p>
+                    Идеи игроков · Вчера
+                </p>
+            </div>
+
+            <div class="topic-count">
+                567 ответов
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- RULES -->
+
+<section class="section" id="rules">
+
+    <div class="section-head">
+
+        <div>
+            <h2>Правила проекта</h2>
+            <p>Основные правила поведения</p>
+        </div>
+
+    </div>
+
+
+    <div class="rules">
+
+        <div class="rule">
+
+            <h3>01. Уважение</h3>
+
+            <p>
+                Уважай других игроков.
+                Запрещены оскорбления, травля
+                и провокации.
+            </p>
+
+        </div>
+
+
+        <div class="rule">
+
+            <h3>02. RolePlay</h3>
+
+            <p>
+                Соблюдай игровую атмосферу
+                и придерживайся правил
+                RolePlay.
+            </p>
+
+        </div>
+
+
+        <div class="rule">
+
+            <h3>03. Честная игра</h3>
+
+            <p>
+                Использование читов, багов
+                и стороннего ПО запрещено.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- FOOTER -->
 
 <footer>
-    © 2026 SkyNet — Digital Future
+
+    <strong>SkyNet RP</strong>
+
+    <br><br>
+
+    © 2026 SkyNet RP.
+    Все права защищены.
+
 </footer>
 
 
-<!-- Авторизация -->
+<!-- AUTH MODAL -->
 
-<div class="modal" id="loginModal">
+<div class="overlay" id="authModal">
 
-    <div class="modal-box">
+    <div class="modal">
 
-        <span class="close" onclick="closeLogin()">×</span>
+        <div class="modal-head">
 
-        <h2>Вход в SkyNet</h2>
+            <h2 id="authTitle">
+                Вход в SkyNet
+            </h2>
 
-        <input
-            class="input"
-            type="email"
-            id="email"
-            placeholder="Email"
-        >
+            <button class="close"
+                    onclick="closeModal('authModal')">
+                ×
+            </button>
 
-        <input
-            class="input"
-            type="password"
-            id="password"
-            placeholder="Пароль"
-        >
+        </div>
+
+
+        <div id="registerName"
+             class="field"
+             style="display:none">
+
+            <label>Игровое имя</label>
+
+            <input
+                id="username"
+                placeholder="Например: Alex_Sky">
+
+        </div>
+
+
+        <div class="field">
+
+            <label>Email</label>
+
+            <input
+                id="email"
+                type="email"
+                placeholder="you@example.com">
+
+        </div>
+
+
+        <div class="field">
+
+            <label>Пароль</label>
+
+            <input
+                id="password"
+                type="password"
+                placeholder="••••••••">
+
+        </div>
+
 
         <button
-            class="modal-button"
-            onclick="login()">
-            Войти
+            class="modal-submit"
+            onclick="submitAuth()">
+
+            <span id="authButton">
+                Войти
+            </span>
+
         </button>
 
-        <div id="message"></div>
+
+        <div class="switch">
+
+            <span id="switchText">
+                Нет аккаунта?
+            </span>
+
+            <span onclick="switchAuth()"
+                  id="switchButton">
+                Регистрация
+            </span>
+
+        </div>
 
     </div>
 
 </div>
 
 
+<!-- PROFILE MODAL -->
+
+<div class="overlay" id="profileModal">
+
+    <div class="modal">
+
+        <div class="modal-head">
+
+            <h2>Личный кабинет</h2>
+
+            <button class="close"
+                    onclick="closeModal('profileModal')">
+                ×
+            </button>
+
+        </div>
+
+
+        <div class="profile">
+
+            <div class="avatar">
+                👤
+            </div>
+
+            <div>
+
+                <h2 id="profileName">
+                    Игрок
+                </h2>
+
+                <p id="profileEmail">
+                    user@example.com
+                </p>
+
+                <div class="profile-stats">
+
+                    <div class="profile-stat">
+                        Уровень:
+                        <b>12</b>
+                    </div>
+
+                    <div class="profile-stat">
+                        Часов:
+                        <b>184</b>
+                    </div>
+
+                    <div class="profile-stat">
+                        SkyCoins:
+                        <b>1 250</b>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <br>
+
+        <button
+            class="modal-submit"
+            onclick="logout()">
+
+            Выйти из аккаунта
+
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- FORUM MODAL -->
+
+<div class="overlay" id="forumModal">
+
+    <div class="modal">
+
+        <div class="modal-head">
+
+            <h2>Новая тема</h2>
+
+            <button class="close"
+                    onclick="closeModal('forumModal')">
+                ×
+            </button>
+
+        </div>
+
+
+        <div class="field">
+
+            <label>Название темы</label>
+
+            <input
+                id="topicTitle"
+                placeholder="Введите название">
+
+        </div>
+
+
+        <div class="field">
+
+            <label>Сообщение</label>
+
+            <textarea
+                id="topicText"
+                rows="5"
+                placeholder="Ваше сообщение..."></textarea>
+
+        </div>
+
+
+        <button
+            class="modal-submit"
+            onclick="createTopic()">
+
+            Создать тему
+
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- TOAST -->
+
+<div class="toast" id="toast"></div>
+
+
 <script>
 
-    const modal = document.getElementById("loginModal");
+/* =========================================
+   SKYNET FRONTEND SYSTEM
+========================================= */
 
-    function openLogin() {
-        modal.classList.add("active");
+let authMode = "login";
+
+
+function $(id){
+    return document.getElementById(id);
+}
+
+
+/* TOAST */
+
+function toast(text){
+
+    const element = $("toast");
+
+    element.textContent = text;
+
+    element.classList.add("show");
+
+    setTimeout(() => {
+        element.classList.remove("show");
+    },3000);
+}
+
+
+/* MODALS */
+
+function openAuth(){
+
+    authMode = "login";
+
+    updateAuthUI();
+
+    $("authModal").classList.add("show");
+}
+
+
+function closeModal(id){
+
+    $(id).classList.remove("show");
+
+}
+
+
+/* AUTH UI */
+
+function switchAuth(){
+
+    if(authMode === "login"){
+        authMode = "register";
+    }else{
+        authMode = "login";
     }
 
-    function closeLogin() {
-        modal.classList.remove("active");
-        document.getElementById("message").textContent = "";
+    updateAuthUI();
+}
+
+
+function updateAuthUI(){
+
+    const register =
+        authMode === "register";
+
+    $("authTitle").textContent =
+        register
+        ? "Регистрация"
+        : "Вход в SkyNet";
+
+    $("authButton").textContent =
+        register
+        ? "Создать аккаунт"
+        : "Войти";
+
+    $("switchText").textContent =
+        register
+        ? "Уже есть аккаунт?"
+        : "Нет аккаунта?";
+
+    $("switchButton").textContent =
+        register
+        ? "Войти"
+        : "Регистрация";
+
+    $("registerName").style.display =
+        register ? "block" : "none";
+}
+
+
+/* AUTH */
+
+function submitAuth(){
+
+    const email =
+        $("email").value.trim();
+
+    const password =
+        $("password").value;
+
+    const username =
+        $("username").value.trim();
+
+
+    if(!email || !password){
+
+        toast("Заполни все поля");
+
+        return;
     }
 
-    function login() {
 
-        const email =
-            document.getElementById("email").value;
+    if(authMode === "register"){
 
-        const password =
-            document.getElementById("password").value;
+        if(!username){
 
-        const message =
-            document.getElementById("message");
+            toast("Введите игровое имя");
 
-        if (!email || !password) {
-            message.textContent =
-                "Введите email и пароль";
-            message.style.color = "#f87171";
             return;
         }
 
-        message.textContent =
-            "Добро пожаловать в SkyNet! 🚀";
 
-        message.style.color = "#38bdf8";
+        const user = {
 
-        setTimeout(() => {
-            closeLogin();
-        }, 1500);
+            username,
+            email,
+            level:12,
+            hours:184,
+            coins:1250
+
+        };
+
+
+        localStorage.setItem(
+            "skynet_user",
+            JSON.stringify(user)
+        );
+
+
+        toast("Аккаунт SkyNet создан 🚀");
+
+        closeModal("authModal");
+
+        updateProfile();
+
+        return;
     }
 
-</script>
 
-</body>
-</html>
+    const saved =
+        localStorage.getItem("skynet_user");
+
+
+    if(!saved){
+
+        toast(
+            "Аккаунт не найден. Сначала зарегистрируйтесь
