@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SkyNet — цифровая платформа</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #020617;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        /* Фон */
+
+        .background {
+            position: fixed;
+            inset: 0;
+            z-index: -2;
+            background:
+                radial-gradient(circle at 20% 20%, #07598555, transparent 35%),
+                radial-gradient(circle at 80% 70%, #4f46e555, transparent 35%),
+                #020617;
+        }
+
+        .stars {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            background-image:
+                radial-gradient(#38bdf8 1px, transparent 1px),
+                radial-gradient(#818cf8 1px, transparent 1px);
+            background-size: 80px 80px, 120px 120px;
+            background-position: 0 0, 40px 60px;
+            opacity: .25;
+            animation: moveStars 20s linear infinite;
+        }
+
+        @keyframes moveStars {
+            from {
+                transform: translateY(0);
+            }
+            to {
+                transform: translateY(80px);
+            }
+        }
+
+        /* Навигация */
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 100;
+            padding: 18px 7%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(2, 6, 23, .7);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(255,255,255,.08);
+        }
+
+        .logo {
+            font-size: 27px;
+            font-weight: 800;
+            color: #38bdf8;
+            text-shadow: 0 0 20px #0ea5e9;
+        }
+
+        nav {
+            display: flex;
+            gap: 28px;
+        }
+
+        nav a {
+            color: #cbd5e1;
+            text-decoration: none;
+            transition: .3s;
+        }
+
+        nav a:hover {
+            color: #38bdf8;
+        }
+
+        .login-button {
+            border: 1px solid #38bdf8;
+            color: #38bdf8;
+            background: transparent;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: .3s;
+        }
+
+        .login-button:hover {
+            background: #38bdf8;
+            color: #020617;
+            box-shadow: 0 0 25px #38bdf8;
+        }
+
+        /* Главный экран */
+
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 120px 20px 60px;
+        }
+
+        .badge {
+            color: #7dd3fc;
+            background: #0c4a6e55;
+            border: 1px solid #0ea5e9;
+            padding: 8px 18px;
+            border-radius: 30px;
+            margin-bottom: 25px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%,100% {
+                box-shadow: 0 0 0 #38bdf8;
+            }
+            50% {
+                box-shadow: 0 0 25px #38bdf866;
+            }
+        }
+
+        .hero h1 {
+            font-size: clamp(55px, 10vw, 110px);
+            line-height: .95;
+            margin-bottom: 30px;
+            background: linear-gradient(
+                90deg,
+                #38bdf8,
+                #818cf8,
+                #22d3ee
+            );
+            -webkit-background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 50px #0ea5e955;
+        }
+
+        .hero p {
+            max-width: 650px;
+            color: #94a3b8;
+            font-size: 20px;
+            line-height: 1.6;
+            margin-bottom: 35px;
+        }
+
+        .main-button {
+            padding: 15px 35px;
+            border: none;
+            border-radius: 30px;
+            background: linear-gradient(90deg,#0ea5e9,#6366f1);
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: .3s;
+        }
+
+        .main-button:hover {
+            transform: translateY(-4px) scale(1.04);
+            box-shadow: 0 15px 40px #0ea5e955;
+        }
+
+        /* Секции */
+
+        section {
+            padding: 100px 7%;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-title h2 {
+            font-size: 42px;
+            margin-bottom: 15px;
+        }
+
+        .section-title p {
+            color: #94a3b8;
+        }
+
+        /* Карточки */
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        .card {
+            padding: 35px;
+            border-radius: 25px;
+            background: rgba(15,23,42,.65);
+            border: 1px solid rgba(148,163,184,.15);
+            backdrop-filter: blur(15px);
+            transition: .4s;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            border-color: #38bdf8;
+            box-shadow: 0 15px 50px #0ea5e922;
+        }
+
+        .icon {
+            font-size: 45px;
+            margin-bottom: 20px;
+        }
+
+        .card h3 {
+            font-size: 23px;
+            margin-bottom: 15px;
+        }
+
+        .card p {
+            color: #94a3b8;
+            line-height: 1.6;
+        }
+
+        /* Статистика */
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4,1fr);
+            gap: 20px;
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        .stat {
+            text-align: center;
+            padding: 30px;
+            background: #0f172a99;
+            border-radius: 20px;
+            border: 1px solid #ffffff10;
+        }
+
+        .stat strong {
+            display: block;
+            font-size: 38px;
+            color: #38bdf8;
+            margin-bottom: 8px;
+        }
+
+        .stat span {
+            color: #94a3b8;
+        }
+
+        /* Модальное окно */
+
+        .modal {
+            position: fixed;
+            inset: 0;
+            z-index: 500;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0,0,0,.75);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-box {
+            width: 100%;
+            max-width: 420px;
+            padding: 35px;
+            border-radius: 25px;
+            background: #0f172a;
+            border: 1px solid #334155;
+            box-shadow: 0 0 60px #0ea5e933;
+            animation: modalShow .3s ease;
+        }
+
+        @keyframes modalShow {
+            from {
+                opacity: 0;
+                transform: scale(.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .modal-box h2 {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .input {
+            width: 100%;
+            padding: 14px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            border: 1px solid #334155;
+            outline: none;
+            background: #020617;
+            color: white;
+        }
+
+        .input:focus {
+            border-color: #38bdf8;
+        }
+
+        .close {
+            float: right;
+            cursor: pointer;
+            font-size: 25px;
+            color: #94a3b8;
+        }
+
+        .close:hover {
+            color: white;
+        }
+
+        .modal-button {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            background: #0ea5e9;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .modal-button:hover {
+            background: #0284c7;
+        }
+
+        #message {
+            text-align: center;
+            margin-top: 15px;
+            color: #38bdf8;
+        }
+
+        /* Футер */
+
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            border-top: 1px solid #ffffff10;
+            color: #64748b;
+        }
+
+        /* Телефон */
+
+        @media(max-width: 800px) {
+
+            nav {
+                display: none;
+            }
+
+            header {
+                padding: 15px 5%;
+            }
+
+            .hero {
+                padding-top: 140px;
+            }
+
+            .hero p {
+                font-size: 17px;
+            }
+
+            .cards {
+                grid-template-columns: 1fr;
+            }
+
+            .stats {
+                grid-template-columns: repeat(2,1fr);
+            }
+
+            section {
+                padding: 70px 5%;
+            }
+
+            .section-title h2 {
+                font-size: 32px;
+            }
+        }
+
+        @media(max-width: 450px) {
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .logo {
+                font-size: 22px;
+            }
+
+            .login-button {
+                padding: 8px 14px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="background"></div>
+<div class="stars"></div>
+
+<!-- Навигация -->
+
+<header>
+
+    <div class="logo">☁ SkyNet</div>
+
+    <nav>
+        <a href="#home">Главная</a>
+        <a href="#features">Возможности</a>
+        <a href="#stats">Статистика</a>
+    </nav>
+
+    <button class="login-button" onclick="openLogin()">
+        Войти
+    </button>
+
+</header>
+
+
+<!-- Главная -->
+
+<main>
+
+<section class="hero" id="home">
+
+    <div class="badge">
+        🚀 Добро пожаловать в SkyNet
+    </div>
+
+    <h1>SkyNet</h1>
+
+    <p>
+        Новое поколение цифровой платформы.
+        Быстро. Безопасно. Современно.
+    </p>
+
+    <button class="main-button" onclick="openLogin()">
+        Начать работу →
+    </button>
+
+</section>
+
+
+<!-- Возможности -->
+
+<section id="features">
+
+    <div class="section-title">
+        <h2>Возможности SkyNet</h2>
+        <p>Всё необходимое в одной платформе</p>
+    </div>
+
+    <div class="cards">
+
+        <div class="card">
+            <div class="icon">⚡</div>
+            <h3>Высокая скорость</h3>
+            <p>
+                Оптимизированная система обеспечивает
+                быструю работу сайта на компьютерах
+                и мобильных устройствах.
+            </p>
+        </div>
+
+        <div class="card">
+            <div class="icon">🔐</div>
+            <h3>Безопасность</h3>
+            <p>
+                Современный интерфейс и архитектура,
+                созданные с учётом безопасности
+                пользовательских данных.
+            </p>
+        </div>
+
+        <div class="card">
+            <div class="icon">☁️</div>
+            <h3>Облачная система</h3>
+            <p>
+                Доступ к вашей платформе из любого
+                места и с любого устройства.
+            </p>
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- Статистика -->
+
+<section id="stats">
+
+    <div class="section-title">
+        <h2>SkyNet в цифрах</h2>
+        <p>Платформа, созданная для будущего</p>
+    </div>
+
+    <div class="stats">
+
+        <div class="stat">
+            <strong>99.9%</strong>
+            <span>Доступность</span>
+        </div>
+
+        <div class="stat">
+            <strong>24/7</strong>
+            <span>Работа системы</span>
+        </div>
+
+        <div class="stat">
+            <strong>∞</strong>
+            <span>Возможности</span>
+        </div>
+
+        <div class="stat">
+            <strong>1</strong>
+            <span>Единая платформа</span>
+        </div>
+
+    </div>
+
+</section>
+
+</main>
+
+
+<!-- Футер -->
+
+<footer>
+    © 2026 SkyNet — Digital Future
+</footer>
+
+
+<!-- Авторизация -->
+
+<div class="modal" id="loginModal">
+
+    <div class="modal-box">
+
+        <span class="close" onclick="closeLogin()">×</span>
+
+        <h2>Вход в SkyNet</h2>
+
+        <input
+            class="input"
+            type="email"
+            id="email"
+            placeholder="Email"
+        >
+
+        <input
+            class="input"
+            type="password"
+            id="password"
+            placeholder="Пароль"
+        >
+
+        <button
+            class="modal-button"
+            onclick="login()">
+            Войти
+        </button>
+
+        <div id="message"></div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    const modal = document.getElementById("loginModal");
+
+    function openLogin() {
+        modal.classList.add("active");
+    }
+
+    function closeLogin() {
+        modal.classList.remove("active");
+        document.getElementById("message").textContent = "";
+    }
+
+    function login() {
+
+        const email =
+            document.getElementById("email").value;
+
+        const password =
+            document.getElementById("password").value;
+
+        const message =
+            document.getElementById("message");
+
+        if (!email || !password) {
+            message.textContent =
+                "Введите email и пароль";
+            message.style.color = "#f87171";
+            return;
+        }
+
+        message.textContent =
+            "Добро пожаловать в SkyNet! 🚀";
+
+        message.style.color = "#38bdf8";
+
+        setTimeout(() => {
+            closeLogin();
+        }, 1500);
+    }
+
+</script>
+
+</body>
+</html>
